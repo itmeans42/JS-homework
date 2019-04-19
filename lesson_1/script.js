@@ -15,13 +15,13 @@ let firstQuestion = prompt("Введите обязательную статью
 let secondQuestion = prompt("Во сколько обойдется?");
 
 appData.expenses[firstQuestion] = secondQuestion;
-appData.expenses[firstQuestion] = secondQuestion;
+
 
 firstQuestion = prompt("Введите обязательную статью расходов в этом месяце:");
 secondQuestion = prompt("Во сколько обойдется?");
 
 appData.expenses[firstQuestion] = secondQuestion;
-appData.expenses[firstQuestion] = secondQuestion;
+
 
 alert(appData.budget / 30);
 
