@@ -1,7 +1,7 @@
-let money = +prompt ("Ваш бюджет на месяц?");
-let time = prompt ("Введите дату в формате YYYY-MM-DD");
+let money = +prompt ("Ваш бюджет на месяц?"),
+    time = prompt ("Введите дату в формате YYYY-MM-DD"),
 
-let appData = {
+    appData = {
     budget: money,
     timeData: time,
     expenses: {},
@@ -11,16 +11,15 @@ let appData = {
 };
 
 
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < 2;) {
     let a = prompt("Введите обязательную статью расходов в этом месяце:"),
         b = prompt("Во сколько обойдется?");
 
-    if ( (typeof(a))=== 'string' && (typeof(a)) != null && (typeof(b)) != null
+    if ( typeof(a) === 'string' && typeof(a) != null && typeof(b) != null
         && a != '' && b != '' && a.length < 50) {
         console.log("Done!");
         appData.expenses[a] = b;
-    } else {
-        i = i - 1;
+        i++;
     }
 }
 
@@ -29,14 +28,12 @@ while (i < 2) {
     let a = prompt("Введите обязательную статью расходов в этом месяце:"),
         b = prompt("Во сколько обойдется?");
 
-    if ( (typeof(a))=== 'string' && (typeof(a)) != null && (typeof(b)) != null
+    if ( typeof(a) === 'string' && typeof(a) != null && typeof(b) != null
         && a != '' && b != '' && a.length < 50) {
         console.log("Done!");
         appData.expenses[a] = b;
-    } else {
-        i = i - 1;
+        i++;
     }
-        i++; 
 }*/
 
 /*let i = 0;
@@ -44,14 +41,12 @@ do {
     let a = prompt("Введите обязательную статью расходов в этом месяце:"),
         b = prompt("Во сколько обойдется?");
 
-    if ( (typeof(a))=== 'string' && (typeof(a)) != null && (typeof(b)) != null
+    if ( typeof(a) === 'string' && typeof(a) != null && typeof(b) != null
         && a != '' && b != '' && a.length < 50) {
         console.log("Done!");
         appData.expenses[a] = b;
-    } else {
-        i = i - 1;
-    }
-        i++; 
+        i++;
+    } 
 } while (i < 2);*/
 
 appData.moneyPerDay = appData.budget / 30;
