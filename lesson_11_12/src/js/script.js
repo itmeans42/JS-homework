@@ -109,70 +109,81 @@
 
     });
 
-    //form
+//form
 
     let message = {
-        loading: 'Загрузка...',
-        success: 'Спасибо! Скоро мы с вами свяжемся :)',
-        failure: 'Что-то пошло не так...'
-    };
+		loading: 'Загрузка...',
+		success: 'Спасибо! Скоро мы с вами свяжемся :)',
+		failure: 'Что-то пошло не так...'
+	};
 
-    let form = document.querySelector('.main-form'),
-        input = form.getElementsByTagName('input'),
-        contactForm = document.querySelector('#form'),
-        statusMessage = document.createElement('div');
-        statusMessage.classList.add("status");
+	let form = document.querySelector('.main-form'),
+		contactForm = document.querySelector('#form'),
+		inputNumber = document.querySelectorAll('input[type="tel"]'),
+		statusMessage = document.createElement('div');
 
-    function sendForm(elem) {
-    elem.addEventListener("submit", function (e) {
-        e.preventDefault();
-        elem.appendChild(statusMessage);
+		for(let i = 0; i < inputNumber.length; i++){ 
+			inputNumber[i].addEventListener('input', () => {
+				inputNumber[i].value = inputNumber[i].value.replace(/[^\+\d]/g, '');
+			});
+		}
+		statusMessage.classList.add('status');
 
-        let formData = new FormData(elem);
+	function sendForm(elem) {
+		elem.addEventListener('submit', function(event) {
+			event.preventDefault();
+			elem.appendChild(statusMessage);
+			let input = elem.getElementsByTagName('input');
+			let formData = new FormData(elem);
+			statusMessage.style.display = 'block';
+		
+			function postData(data){
+				return new Promise(function(resolve,reject) {
+					let request = new XMLHttpRequest();
+					request.open('OPTIONS', 'server.php');// у меня почему-то не работает POST, ошибка 405
+					request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 
-        function postData(data) {
-            return new Promise(function (resolve, reject) {
-                let request = new XMLHttpRequest();
+					request.addEventListener('readystatechange', function() {
+						if (request.readyState < 4){
+							resolve();
+						} else if(request.readyState === 4 && request.status === 200) {
+							resolve();
+						} else {
+							reject();
+						}
 
-                request.open("POST", "server.php");
-                request.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+					});
 
-                request.onreadystatechange = function () {
-                    if (request.readyState < 4) {
-                        resolve();
-                    } else if (request.readyState === 4) {
-                        if (request.status == 200 && request.status < 4) {
-                            resolve();
-                        } else {
-                            reject();
-                        }
-                    }
-                };
-                request.send(data);
-            });
-        }
-        function clearInput() {
-            [...input].forEach(elem => (elem.value = ""));
-        }
-        postData(formData)
-            .then(() => (statusMessage.innerHTML = message.loading))
-            .then(() => (statusMessage.innerHTML = message.success))
-            .catch(() => (statusMessage.innerHTML = message.failure))
-            .then(clearInput);
-    });
-    }
-    sendForm(form);
+					let obj = {};
+					formData.forEach(function(value, key) {
+						obj[key] = value;
+					});
+					let json = JSON.stringify(obj);
+					request.send(json);
+
+				});
+			} // postData
+
+			function clearInput() { 
+				for(let i = 0; i < input.length; i++) { 
+					input[i].value = '';
+				}
+			}
+
+			postData(formData)
+				.then(()=> statusMessage.innerHTML = message.loading)
+				.then(()=> {
+					statusMessage.innerHTML = message.success;
+					setTimeout(()=> { 
+						statusMessage.style.display = 'none';
+					}, 5000);
+				})
+				.catch(()=> statusMessage.innerHTML = message.failure)
+				.then(clearInput);
+		});
+	}
+
+	sendForm(form);
     sendForm(contactForm);
-
-    //validation
-
-    let inputsPhone = document.querySelectorAll('input[name="phone"]')
-
-    function onlyNumber(input) {
-        input.onkeydown = function () {
-            return (this.value = this.value.replace(/[^0-9]/g, ""));
-        };
-    }
-    [...inputsPhone].forEach(elem => onlyNumber(elem));
 
     });
